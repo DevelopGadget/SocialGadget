@@ -11,40 +11,41 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Backend
-{
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
+namespace Backend {
+    public class Startup {
+        public Startup (IConfiguration configuration) {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
+        public void ConfigureServices (IServiceCollection services) {
+            services.AddAuthentication (opt => { }).AddGitHub (
+                opt => {
+                    opt.ClientId = "b019e4b097444dddcc05";
+                    opt.ClientSecret = "da9e0e1395792d1e91d4c62d16e4fa7e40e5f842";
+                }
+            );
+            services.AddControllers ();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+            if (env.IsDevelopment ()) {
+                app.UseDeveloperExceptionPage ();
             }
 
-            app.UseHttpsRedirection();
+            app.UseAuthentication ();
 
-            app.UseRouting();
+            app.UseHttpsRedirection ();
 
-            app.UseAuthorization();
+            app.UseRouting ();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+            app.UseAuthorization ();
+
+            app.UseEndpoints (endpoints => {
+                endpoints.MapControllers ();
             });
         }
     }
